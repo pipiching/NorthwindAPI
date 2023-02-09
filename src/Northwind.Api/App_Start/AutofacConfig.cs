@@ -18,20 +18,21 @@ namespace Northwind.Api.App_Start
             ContainerBuilder builder = new ContainerBuilder();
             builder.RegisterApiControllers(Assembly.GetExecutingAssembly‌​());
 
-            Assembly[] assemblies = AppDomain.CurrentDomain.GetAssemblies();
-            builder.RegisterAssemblyTypes(assemblies)
-                .Where(t => t.Name.EndsWith("Service"))
-                .AsImplementedInterfaces();
-
-            builder.Register(s => MappingConfiguration.CreateMapper(s.Resolve<IUnitOfWork>()))
-                .As<IMapper>()
-                .InstancePerLifetimeScope();
-
             builder.RegisterType<DbConnectionFactory>()
                 .As<IDbConnectionFactory>()
                 .InstancePerLifetimeScope();
 
             builder.RegisterType<UnitOfWork>().As<IUnitOfWork>().InstancePerLifetimeScope();
+
+            builder.Register(s => MappingConfiguration.CreateMapper(s.Resolve<IUnitOfWork>()))
+                .As<IMapper>()
+                .InstancePerLifetimeScope();
+
+            Assembly[] assemblies = AppDomain.CurrentDomain.GetAssemblies();
+            builder.RegisterAssemblyTypes(assemblies)
+                .Where(t => t.Name.EndsWith("Service"))
+                .AsImplementedInterfaces();
+
 
             IContainer container = builder.Build();
             GlobalConfiguration.Configuration.DependencyResolver = new AutofacWebApiDependencyResolver(container);
