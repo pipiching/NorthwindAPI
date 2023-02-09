@@ -1,0 +1,85 @@
+{
+	"info": {
+		"_postman_id": "ea6e0891-e122-4de1-b637-a63ba2a4739b",
+		"name": "Northwind",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "14449389"
+	},
+	"item": [
+		{
+			"name": "getProduct",
+			"request": {
+				"method": "GET",
+				"header": []
+			},
+			"response": []
+		},
+		{
+			"name": "updateProduct",
+			"request": {
+				"method": "PUT",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"productID\": 1,\r\n    \"productName\": \"Chai\",\r\n    \"supplierID\": 1,\r\n    \"categoryID\": 1,\r\n    \"quantityPerUnit\": \"10 boxes x 20 bags\",\r\n    \"unitPrice\": 18.0000,\r\n    \"unitsInStock\": 39,\r\n    \"unitsOnOrder\": 0,\r\n    \"reorderLevel\": 10,\r\n    \"discontinued\": false\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "https://localhost:44343/api/products/1",
+					"protocol": "https",
+					"host": [
+						"localhost"
+					],
+					"port": "44343",
+					"path": [
+						"api",
+						"products",
+						"1"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "addProduct",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"productID\": 78,\r\n    \"productName\": \"test\",\r\n    \"supplierID\": 1,\r\n    \"categoryID\": 1,\r\n    \"quantityPerUnit\": \"10 boxes x 20 bags\",\r\n    \"unitPrice\": 18.0000,\r\n    \"unitsInStock\": 39,\r\n    \"unitsOnOrder\": 0,\r\n    \"reorderLevel\": 10,\r\n    \"discontinued\": false\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "https://localhost:44343/api/products",
+					"protocol": "https",
+					"host": [
+						"localhost"
+					],
+					"port": "44343",
+					"path": [
+						"api",
+						"products"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "deleteProduct",
+			"request": {
+				"method": "GET",
+				"header": []
+			},
+			"response": []
+		}
+	]
+}
