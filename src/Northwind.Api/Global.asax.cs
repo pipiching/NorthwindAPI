@@ -1,9 +1,5 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Web;
+using Northwind.Api.App_Start;
 using System.Web.Http;
-using System.Web.Routing;
 
 namespace Northwind.Api
 {
@@ -12,6 +8,7 @@ namespace Northwind.Api
         protected void Application_Start()
         {
             GlobalConfiguration.Configure(WebApiConfig.Register);
+            AutofacConfig.Bootstrapper();
         }
     }
 }

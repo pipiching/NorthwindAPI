@@ -1,7 +1,6 @@
 ﻿using Northwind.Api.Models;
 using Northwind.Repository.Models;
 using Northwind.Service.Models;
-using Northwind.Service.Services;
 using Northwind.Service.Services.Interfaces;
 using System;
 using System.Collections.Generic;
@@ -13,9 +12,9 @@ namespace Northwind.Api.Controllers
     public class ProductsController : ApiController
     {
         private readonly IProductsService _productsService;
-        public ProductsController()
+        public ProductsController(IProductsService productsService)
         {
-            _productsService = new ProductsService();
+            _productsService = productsService;
         }
 
         [HttpGet]
