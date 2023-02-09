@@ -1,9 +1,11 @@
-﻿using Northwind.Api.Models;
+﻿using Northwind.Api.Helpers;
+using Northwind.Api.Models;
+using Northwind.Common.Enums;
 using Northwind.Repository.Models;
 using Northwind.Service.Models;
 using Northwind.Service.Services.Interfaces;
-using System;
 using System.Collections.Generic;
+using System.Net;
 using System.Web.Http;
 
 namespace Northwind.Api.Controllers
@@ -26,7 +28,9 @@ namespace Northwind.Api.Controllers
             {
                 if (!int.TryParse(queryParams.ProductID, out int productID))
                 {
-                    throw new Exception("convert ProductID error");
+                    return Content(HttpStatusCode.BadRequest, APIHelper.CreateAPIError(
+                        ErrorType.INVALID_REQUEST_PARAMETERS, "convert ProductID failed")
+                    );
                 }
                 searchModel.ProductID = productID;
             }

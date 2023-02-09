@@ -1,4 +1,5 @@
 ﻿using Newtonsoft.Json.Serialization;
+using Northwind.Api.Filters;
 using System.Web.Http;
 
 namespace Northwind.Api
@@ -8,6 +9,7 @@ namespace Northwind.Api
         public static void Register(HttpConfiguration config)
         {
             // Web API configuration and services
+            config.Filters.Add(new ErrorHandlerAttribute());
 
             // Web API routes
             config.MapHttpAttributeRoutes();
