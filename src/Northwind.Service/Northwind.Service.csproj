@@ -51,6 +51,10 @@
     <Compile Include="Services\ProductsService.cs" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\Northwind.Common\Northwind.Common.csproj">
+      <Project>{CF51AF11-1B55-4DC5-BFFB-F05CE99D27A0}</Project>
+      <Name>Northwind.Common</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Northwind.Repository\Northwind.Repository.csproj">
       <Project>{07A9AE68-3208-463E-A57E-54E542F832B8}</Project>
       <Name>Northwind.Repository</Name>

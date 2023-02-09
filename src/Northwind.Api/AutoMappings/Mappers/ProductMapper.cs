@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using Northwind.Api.Models;
 using Northwind.Repository.Entities;
 using Northwind.Repository.UnitOfWork;
 using Northwind.Service.Models;
@@ -13,6 +14,10 @@ namespace Northwind.Api.AutoMappings.Mappers
             _unitOfWork = unitOfWork;
 
             CreateMap<Product, ProductDTO>()
+                .ReverseMap();
+            CreateMap<ProductCreateAPIModel, Product>()
+                .ReverseMap();
+            CreateMap<ProductUpdateAPIModel, Product>()
                 .ReverseMap();
         }
     }

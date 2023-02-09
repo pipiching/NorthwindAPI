@@ -4,7 +4,7 @@ using System.Collections.Generic;
 
 namespace Northwind.Repository.Repositories.Interfaces
 {
-    public interface IProductRepository
+    public interface IProductRepository : IRepositoryBase<Product>
     {
         IEnumerable<Product> Search(ProductSearchModel searchModel);
     }

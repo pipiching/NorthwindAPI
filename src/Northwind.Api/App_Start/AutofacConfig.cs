@@ -18,10 +18,6 @@ namespace Northwind.Api.App_Start
             ContainerBuilder builder = new ContainerBuilder();
             builder.RegisterApiControllers(Assembly.GetExecutingAssembly‌​());
 
-            builder.RegisterType<DbConnectionFactory>()
-                .As<IDbConnectionFactory>()
-                .InstancePerLifetimeScope();
-
             builder.RegisterType<UnitOfWork>().As<IUnitOfWork>().InstancePerLifetimeScope();
 
             builder.Register(s => MappingConfiguration.CreateMapper(s.Resolve<IUnitOfWork>()))
@@ -32,6 +28,10 @@ namespace Northwind.Api.App_Start
             builder.RegisterAssemblyTypes(assemblies)
                 .Where(t => t.Name.EndsWith("Service"))
                 .AsImplementedInterfaces();
+
+            builder.RegisterType<DbConnectionFactory>()
+                .As<IDbConnectionFactory>()
+                .InstancePerLifetimeScope();
 
 
             IContainer container = builder.Build();

@@ -11,7 +11,7 @@ namespace Northwind.Repository.Entities
         /// <summary>
         ///
         /// </summary>
-        [ExplicitKey]
+        [Key]
         public int ProductID { get; set; } //(int, not null)
         /// <summary>
         ///
@@ -20,11 +20,11 @@ namespace Northwind.Repository.Entities
         /// <summary>
         ///
         /// </summary>
-        public int SupplierID { get; set; } //(int, null)
+        public int? SupplierID { get; set; } //(int, null)
         /// <summary>
         ///
         /// </summary>
-        public int CategoryID { get; set; } //(int, null)
+        public int? CategoryID { get; set; } //(int, null)
         /// <summary>
         ///
         /// </summary>
@@ -32,22 +32,22 @@ namespace Northwind.Repository.Entities
         /// <summary>
         ///
         /// </summary>
-        public decimal UnitPrice { get; set; } //(money, null)
+        public decimal? UnitPrice { get; set; } //(money, null)
         /// <summary>
         ///
         /// </summary>
-        public short UnitsInStock { get; set; } //(smallint, null)
+        public short? UnitsInStock { get; set; } //(smallint, null)
         /// <summary>
         ///
         /// </summary>
-        public short UnitsOnOrder { get; set; } //(smallint, null)
+        public short? UnitsOnOrder { get; set; } //(smallint, null)
         /// <summary>
         ///
         /// </summary>
-        public short ReorderLevel { get; set; } //(smallint, null)
+        public short? ReorderLevel { get; set; } //(smallint, null)
         /// <summary>
         ///
         /// </summary>
-        public bool Discontinued { get; set; } //(bit, not null)
+        public bool? Discontinued { get; set; } //(bit, not null)
     }
 }
