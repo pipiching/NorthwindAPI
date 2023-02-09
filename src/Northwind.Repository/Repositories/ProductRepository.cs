@@ -1,18 +1,19 @@
 ﻿using Dapper;
+using Northwind.Repository.DbConnectionFactory;
 using Northwind.Repository.Entities;
 using Northwind.Repository.Models;
 using Northwind.Repository.Repositories.Interfaces;
 using System.Collections.Generic;
-using System.Data;
+using static Dapper.SqlBuilder;
 
 namespace Northwind.Repository.Repositories
 {
-    public class ProductRepository : IProductRepository
+    public class ProductRepository : RepositoryBase<Product>, IProductRepository
     {
-        private readonly IDbConnection _connection;
-        public ProductRepository(IDbConnection connection)
+        public ProductRepository(IDbConnectionFactory dbConnectionFactory, string connectionName)
+            : base(dbConnectionFactory, connectionName)
         {
-            _connection = connection;
+
         }
 
         public IEnumerable<Product> Search(ProductSearchModel searchModel)
@@ -20,24 +21,26 @@ namespace Northwind.Repository.Repositories
             string sql =
             $@"
                 SELECT *
-                FROM Products
-                WHERE 1 = 1
+                FROM {GetTableNameMapper()}
+                /**where**/
+                /**orderby**/
             ";
 
-            DynamicParameters dynamicParameters = new DynamicParameters();
+            SqlBuilder builder = new SqlBuilder();
+            Template template = builder.AddTemplate(sql);
 
             if (searchModel.ProductID != null)
             {
-                sql += " AND ProductID=@ProductID";
-                dynamicParameters.Add("ProductID", searchModel.ProductID);
+                builder.Where($"ProductID = @ProductID", new { searchModel.ProductID });
             }
             if (!string.IsNullOrEmpty(searchModel.ProductName))
             {
-                sql += " AND ProductName=@ProductName";
-                dynamicParameters.Add("ProductName", searchModel.ProductName);
+                builder.Where($"ProductName = @ProductName", new { searchModel.ProductName });
             }
 
-            return _connection.Query<Product>(sql, dynamicParameters);
+            builder.OrderBy("(SELECT NULL)");
+
+            return Connection.Query<Product>(template.RawSql, template.Parameters);
         }
     }
 }

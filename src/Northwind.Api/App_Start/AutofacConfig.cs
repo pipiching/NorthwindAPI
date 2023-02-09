@@ -1,5 +1,7 @@
 ﻿using Autofac;
 using Autofac.Integration.WebApi;
+using Northwind.Repository.DbConnectionFactory;
+using Northwind.Repository.UnitOfWork;
 using System;
 using System.Linq;
 using System.Reflection;
@@ -18,6 +20,11 @@ namespace Northwind.Api.App_Start
             builder.RegisterAssemblyTypes(assemblies)
                 .Where(t => t.Name.EndsWith("Service"))
                 .AsImplementedInterfaces();
+
+            builder.RegisterType<DbConnectionFactory>()
+                .As<IDbConnectionFactory>()
+                .InstancePerLifetimeScope();
+            builder.RegisterType<UnitOfWork>().As<IUnitOfWork>().InstancePerLifetimeScope();
 
             IContainer container = builder.Build();
             GlobalConfiguration.Configuration.DependencyResolver = new AutofacWebApiDependencyResolver(container);

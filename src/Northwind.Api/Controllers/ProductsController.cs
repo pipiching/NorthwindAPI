@@ -29,7 +29,7 @@ namespace Northwind.Api.Controllers
                 if (!int.TryParse(queryParams.ProductID, out int productID))
                 {
                     return Content(HttpStatusCode.BadRequest, APIHelper.CreateAPIError(
-                        ErrorType.INVALID_REQUEST_PARAMETERS, "convert ProductID failed")
+                        ErrorType.INVALID_ID, "convert ProductID failed")
                     );
                 }
                 searchModel.ProductID = productID;

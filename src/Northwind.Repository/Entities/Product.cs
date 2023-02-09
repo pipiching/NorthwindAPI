@@ -1,13 +1,17 @@
-﻿namespace Northwind.Repository.Entities
+﻿using Dapper.Contrib.Extensions;
+
+namespace Northwind.Repository.Entities
 {
     /// <summary>
     /// Products
     /// </summary>
+    [Table("Products")]
     public class Product
     {
         /// <summary>
         ///
         /// </summary>
+        [ExplicitKey]
         public int ProductID { get; set; } //(int, not null)
         /// <summary>
         ///
