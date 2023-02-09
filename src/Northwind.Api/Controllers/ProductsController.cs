@@ -1,7 +1,9 @@
 ﻿using Northwind.Api.Models;
+using Northwind.Repository.Models;
 using Northwind.Service.Models;
 using Northwind.Service.Services;
 using Northwind.Service.Services.Interfaces;
+using System;
 using System.Collections.Generic;
 using System.Web.Http;
 
@@ -20,7 +22,21 @@ namespace Northwind.Api.Controllers
         [Route("")]
         public IHttpActionResult Get([FromUri] ProductQueryParams queryParams)
         {
-            IEnumerable<ProductDTO> products = _productsService.GetProducts();
+            ProductSearchModel searchModel = new ProductSearchModel();
+            if (!string.IsNullOrEmpty(queryParams.ProductID))
+            {
+                if (!int.TryParse(queryParams.ProductID, out int productID))
+                {
+                    throw new Exception("convert ProductID error");
+                }
+                searchModel.ProductID = productID;
+            }
+            if (!string.IsNullOrEmpty(queryParams.ProductName))
+            {
+                searchModel.ProductName = queryParams.ProductName;
+            }
+
+            IEnumerable<ProductDTO> products = _productsService.GetProducts(searchModel);
 
             return Ok(products);
         }

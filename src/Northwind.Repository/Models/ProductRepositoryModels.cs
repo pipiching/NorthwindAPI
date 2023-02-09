@@ -1,11 +1,11 @@
-﻿namespace Northwind.Api.Models
+﻿namespace Northwind.Repository.Models
 {
-    public class ProductQueryParams
+    public class ProductSearchModel
     {
         /// <summary>
         ///
         /// </summary>
-        public string ProductID { get; set; } //(int, not null)
+        public int? ProductID { get; set; } //(int, not null)
         /// <summary>
         ///
         /// </summary>

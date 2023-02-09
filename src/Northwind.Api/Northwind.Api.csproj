@@ -105,6 +105,10 @@
     <Folder Include="App_Data\" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\Northwind.Repository\Northwind.Repository.csproj">
+      <Project>{07A9AE68-3208-463E-A57E-54E542F832B8}</Project>
+      <Name>Northwind.Repository</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Northwind.Service\Northwind.Service.csproj">
       <Project>{3738bfad-8b22-4435-8041-d0b07b0619af}</Project>
       <Name>Northwind.Service</Name>
