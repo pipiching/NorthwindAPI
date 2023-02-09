@@ -24,7 +24,7 @@ namespace Northwind.Api.Controllers
         public IHttpActionResult Get([FromUri] ProductQueryParams queryParams)
         {
             ProductSearchModel searchModel = new ProductSearchModel();
-            if (!string.IsNullOrEmpty(queryParams.ProductID))
+            if (!string.IsNullOrEmpty(queryParams?.ProductID))
             {
                 if (!int.TryParse(queryParams.ProductID, out int productID))
                 {
@@ -34,7 +34,7 @@ namespace Northwind.Api.Controllers
                 }
                 searchModel.ProductID = productID;
             }
-            if (!string.IsNullOrEmpty(queryParams.ProductName))
+            if (!string.IsNullOrEmpty(queryParams?.ProductName))
             {
                 searchModel.ProductName = queryParams.ProductName;
             }
