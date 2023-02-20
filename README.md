@@ -26,6 +26,7 @@
 
 - Handle connection to Database.
 - Implement UnitOfWork Design.
+- ORM Dapper.
 
 ### Northwind.Common
 
