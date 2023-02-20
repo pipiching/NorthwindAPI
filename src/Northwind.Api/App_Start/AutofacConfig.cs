@@ -4,8 +4,8 @@ using AutoMapper;
 using Northwind.Api.AutoMappings;
 using Northwind.Repository.DbConnectionFactory;
 using Northwind.Repository.UnitOfWork;
-using System;
-using System.Linq;
+using Northwind.Service.Services;
+using Northwind.Service.Services.Interfaces;
 using System.Reflection;
 using System.Web.Http;
 
@@ -24,9 +24,13 @@ namespace Northwind.Api.App_Start
                 .As<IMapper>()
                 .InstancePerLifetimeScope();
 
-            Assembly[] assemblies = AppDomain.CurrentDomain.GetAssemblies();
-            builder.RegisterAssemblyTypes(assemblies)
-                .Where(t => t.Name.EndsWith("Service"))
+            //Assembly[] assemblies = AppDomain.CurrentDomain.GetAssemblies();
+            //builder.RegisterAssemblyTypes(assemblies)
+            //    .Where(t => t.Name.EndsWith("Service"))
+            //    .AsImplementedInterfaces();
+
+            builder.RegisterType<ProductsService>()
+                .As<IProductsService>()
                 .AsImplementedInterfaces();
 
             builder.RegisterType<DbConnectionFactory>()

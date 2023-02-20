@@ -51,6 +51,8 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Attributes\WhereColumnNameAttribute.cs" />
+    <Compile Include="Attributes\WhereOperatorAttribute.cs" />
     <Compile Include="DbConnectionFactory\DbConnectionFactory.cs" />
     <Compile Include="DbConnectionFactory\IDbConnectionFactory.cs" />
     <Compile Include="Entities\Product.cs" />
@@ -65,7 +67,12 @@
     <Compile Include="UnitOfWork\UnitOfWork.cs" />
     <Compile Include="UnitOfWork\UnitOfWorkBase.cs" />
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <ProjectReference Include="..\Northwind.Common\Northwind.Common.csproj">
+      <Project>{CF51AF11-1B55-4DC5-BFFB-F05CE99D27A0}</Project>
+      <Name>Northwind.Common</Name>
+    </ProjectReference>
+  </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
   </ItemGroup>

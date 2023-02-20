@@ -1,10 +1,6 @@
-﻿using Dapper;
-using Northwind.Repository.DbConnectionFactory;
+﻿using Northwind.Repository.DbConnectionFactory;
 using Northwind.Repository.Entities;
-using Northwind.Repository.Models;
 using Northwind.Repository.Repositories.Interfaces;
-using System.Collections.Generic;
-using static Dapper.SqlBuilder;
 
 namespace Northwind.Repository.Repositories
 {
@@ -16,31 +12,31 @@ namespace Northwind.Repository.Repositories
 
         }
 
-        public IEnumerable<Product> Search(ProductSearchModel searchModel)
-        {
-            string sql =
-            $@"
-                SELECT *
-                FROM {GetTableNameMapper()}
-                /**where**/
-                /**orderby**/
-            ";
+        //public IEnumerable<Product> Search(ProductSearchModel searchModel)
+        //{
+        //    string sql =
+        //    $@"
+        //        SELECT *
+        //        FROM {GetTableNameMapper()}
+        //        /**where**/
+        //        /**orderby**/
+        //    ";
 
-            SqlBuilder builder = new SqlBuilder();
-            Template template = builder.AddTemplate(sql);
+        //    SqlBuilder builder = new SqlBuilder();
+        //    Template template = builder.AddTemplate(sql);
 
-            if (searchModel.ProductID != null)
-            {
-                builder.Where($"ProductID = @ProductID", new { searchModel.ProductID });
-            }
-            if (!string.IsNullOrEmpty(searchModel.ProductName))
-            {
-                builder.Where($"ProductName = @ProductName", new { searchModel.ProductName });
-            }
+        //    if (searchModel.ProductID != null)
+        //    {
+        //        builder.Where($"ProductID = @ProductID", new { searchModel.ProductID });
+        //    }
+        //    if (!string.IsNullOrEmpty(searchModel.ProductName))
+        //    {
+        //        builder.Where($"ProductName = @ProductName", new { searchModel.ProductName });
+        //    }
 
-            builder.OrderBy("(SELECT NULL)");
+        //    builder.OrderBy("(SELECT NULL)");
 
-            return Connection.Query<Product>(template.RawSql, template.Parameters);
-        }
+        //    return Connection.Query<Product>(template.RawSql, template.Parameters);
+        //}
     }
 }

@@ -1,8 +1,12 @@
 ﻿using Dapper;
 using Dapper.Contrib.Extensions;
+using Northwind.Common.Constants;
+using Northwind.Repository.Attributes;
 using Northwind.Repository.DbConnectionFactory;
 using Northwind.Repository.Repositories.Interfaces;
 using Northwind.Repository.UnitOfWork;
+using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Data;
 using System.Linq;
@@ -103,7 +107,6 @@ namespace Northwind.Repository.Repositories
 
         #endregion Update
 
-
         /// <summary>
         /// 取TEntity的TableName
         /// </summary>
@@ -114,48 +117,81 @@ namespace Northwind.Repository.Repositories
 
             return attributeTable != null ? attributeTable.Name : typeof(TModel).Name;
         }
-        protected string GetWhereClause<TParameter>(TParameter parameters, string tableName = null)
+
+        /// <summary>
+        /// Dynamic Query Table Where 
+        /// <para>Define Attribute on Tsearch's Properties</para>
+        /// <para>WhereColumnNameAttribute: columnName, Default is Property.Name</para>
+        /// <para>WhereOperatorAttribute: operator, Default is equalto</para>
+        /// </summary>
+        /// <typeparam name="TSearch"></typeparam>
+        /// <param name="searchModel"></param>
+        /// <returns></returns>
+        public IEnumerable<TModel> Search<TSearch>(TSearch searchModel)
         {
-            if (tableName == null) tableName = GetTableNameMapper();
-            //note the 'where' in-line comment is required, it is a replacement token
-            string query = $"SELECT * FROM {tableName} /**where**/ ";
+            string sql =
+            $@"
+                SELECT *
+                FROM {GetTableNameMapper()}
+                /**where**/
+                /**orderby**/
+            ";
 
             SqlBuilder builder = new SqlBuilder();
-            Template template = builder.AddTemplate(query);
+            Template template = builder.AddTemplate(sql);
 
-            if (parameters == null)
-            {
-                return template.RawSql;
-            }
-            PropertyInfo[] properties = typeof(TParameter).GetProperties();
+            GenerateWhereClause(builder, searchModel);
+
+            builder.OrderBy("(SELECT NULL)");
+
+            return Connection.Query<TModel>(template.RawSql, template.Parameters);
+        }
+
+        /// <summary>
+        /// Create SQL Where clause
+        /// <para>Get WhereOperatorAttribute from searchModel's property</para>
+        /// <para>Determine the operator (=, &lt;, &gt;, LIKE...)</para>
+        /// </summary>
+        /// <typeparam name="TSearch"></typeparam>
+        /// <param name="builder"></param>
+        /// <param name="searchModel"></param>
+        private void GenerateWhereClause<TSearch>(SqlBuilder builder, TSearch searchModel)
+        {
+            DynamicParameters dynamicParameters = new DynamicParameters();
+
+            PropertyInfo[] properties = typeof(TSearch).GetProperties();
             foreach (PropertyInfo property in properties)
             {
-                if (property.PropertyType == typeof(string))
-                {
-                    string value = (string)property.GetValue(parameters, null);
-                    if (!string.IsNullOrEmpty(value))
-                    {
-                        builder.Where($"{property.Name} = @{property.Name}");
-                    }
-                }
-                else if (property.PropertyType == typeof(int))
-                {
-                    int value = (int)property.GetValue(parameters, null);
-                    if (value != null)
-                    {
-                        builder.Where($"{property.Name} = @{property.Name}");
-                    }
-                }
-                else
-                {
-                    if (property.GetValue(parameters, null) != null)
-                    {
-                        builder.Where($"{property.Name} = @{property.Name}");
-                    }
-                }
-            }
+                object value = property.GetValue(searchModel, null);
+                if (value == null) continue;
 
-            return template.RawSql;
+                TypeCode typeCode = Type.GetTypeCode(property.PropertyType);
+                switch (typeCode)
+                {
+                    case TypeCode.String:
+                        if (!string.IsNullOrEmpty(value as string)) continue;
+                        break;
+                    case TypeCode.Object:
+                        if (property.PropertyType.IsGenericType && (value as ICollection).Count == 0) continue;
+                        if (property.PropertyType.IsArray && (value as Array).Length == 0) continue;
+                        break;
+                    default:
+                        break;
+                }
+
+                object[] operatorAttrs = property.GetCustomAttributes(typeof(WhereOperatorAttribute), false);
+                string whereOperator = (operatorAttrs.Length > 0) ? ((WhereOperatorAttribute)operatorAttrs[0]).Operator : TSqlOperator.EqualTo;
+                object[] columnNameAttrs = property.GetCustomAttributes(typeof(WhereColumnNameAttribute), false);
+                string columnName = (operatorAttrs.Length > 0) ? ((WhereColumnNameAttribute)columnNameAttrs[0]).ColumnName : property.Name;
+
+                dynamicParameters.Add(
+                    property.Name,
+                    whereOperator == TSqlOperator.Like ? $"%{value}%" : value
+                );
+
+                builder.Where($"{columnName} {whereOperator} @{property.Name}");
+            }
+            builder.AddParameters(dynamicParameters);
         }
     }
 }

@@ -22,12 +22,12 @@ namespace Northwind.Service.Services
 
         public void Create(Product product)
         {
-            _unitOfWork.ProductRepository.Insert(product);
+            _unitOfWork.GetRepository<Product>().Insert(product);
         }
 
         public ProductDTO Get(int productID)
         {
-            Product product = _unitOfWork.ProductRepository.Get(productID);
+            Product product = _unitOfWork.GetRepository<Product>().Get(productID);
             if (product == null)
             {
                 throw new OperationalException(
@@ -41,7 +41,7 @@ namespace Northwind.Service.Services
 
         public IEnumerable<ProductDTO> Get(ProductSearchModel searchModel)
         {
-            IEnumerable<Product> products = _unitOfWork.ProductRepository.Search(searchModel);
+            IEnumerable<Product> products = _unitOfWork.GetRepository<Product>().Search(searchModel);
             IEnumerable<ProductDTO> productDTOs = _mapper.Map<IEnumerable<Product>, IEnumerable<ProductDTO>>(products);
 
             return productDTOs;
@@ -49,18 +49,18 @@ namespace Northwind.Service.Services
 
         public void Update(Product product)
         {
-            if (_unitOfWork.ProductRepository.Get(product.ProductID) == null)
+            if (_unitOfWork.GetRepository<Product>().Get(product.ProductID) == null)
             {
                 throw new OperationalException(
                     ErrorType.INSTANCE_NOT_FOUND,
                     $"Couldn't find product: {product.ProductID}");
             }
-            _unitOfWork.ProductRepository.Update(product);
+            _unitOfWork.GetRepository<Product>().Update(product);
         }
 
         public void Delete(int productID)
         {
-            Product product = _unitOfWork.ProductRepository.Get(productID);
+            Product product = _unitOfWork.GetRepository<Product>().Get(productID);
             if (product == null)
             {
                 throw new OperationalException(
@@ -68,7 +68,7 @@ namespace Northwind.Service.Services
                     $"Couldn't find product: {productID}");
             }
 
-            _unitOfWork.ProductRepository.Delete(product);
+            _unitOfWork.GetRepository<Product>().Delete(product);
         }
     }
 }

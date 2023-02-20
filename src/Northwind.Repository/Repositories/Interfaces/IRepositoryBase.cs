@@ -24,5 +24,7 @@ namespace Northwind.Repository.Repositories.Interfaces
         bool DeleteAll(IUnitOfWorkBase uow = null);
 
         void Dispose();
+
+        IEnumerable<TModel> Search<TSearch>(TSearch searchModel);
     }
 }
