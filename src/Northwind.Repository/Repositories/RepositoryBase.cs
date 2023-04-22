@@ -165,15 +165,20 @@ namespace Northwind.Repository.Repositories
                 object value = property.GetValue(searchModel, null);
                 if (value == null) continue;
 
-                TypeCode typeCode = Type.GetTypeCode(property.PropertyType);
+                Type type = property.PropertyType;
+                if (type.IsGenericType && type.GetGenericTypeDefinition() == typeof(Nullable<>))
+                {
+                    type = Nullable.GetUnderlyingType(type);
+                }
+                TypeCode typeCode = Type.GetTypeCode(type);
                 switch (typeCode)
                 {
                     case TypeCode.String:
-                        if (!string.IsNullOrEmpty(value as string)) continue;
+                        if (string.IsNullOrEmpty(value as string)) continue;
                         break;
                     case TypeCode.Object:
-                        if (property.PropertyType.IsGenericType && (value as ICollection).Count == 0) continue;
-                        if (property.PropertyType.IsArray && (value as Array).Length == 0) continue;
+                        if (type.IsGenericType && (value as ICollection).Count == 0) continue;
+                        if (type.IsArray && (value as Array).Length == 0) continue;
                         break;
                     default:
                         break;
@@ -182,7 +187,7 @@ namespace Northwind.Repository.Repositories
                 object[] operatorAttrs = property.GetCustomAttributes(typeof(WhereOperatorAttribute), false);
                 string whereOperator = (operatorAttrs.Length > 0) ? ((WhereOperatorAttribute)operatorAttrs[0]).Operator : TSqlOperator.EqualTo;
                 object[] columnNameAttrs = property.GetCustomAttributes(typeof(WhereColumnNameAttribute), false);
-                string columnName = (operatorAttrs.Length > 0) ? ((WhereColumnNameAttribute)columnNameAttrs[0]).ColumnName : property.Name;
+                string columnName = (columnNameAttrs.Length > 0) ? ((WhereColumnNameAttribute)columnNameAttrs[0]).ColumnName : property.Name;
 
                 dynamicParameters.Add(
                     property.Name,
